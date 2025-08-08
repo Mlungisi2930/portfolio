@@ -329,4 +329,60 @@ function downloadFile(filePath, fileName) {
         });
 
 
-        
+            document.getElementById('downloadZip').addEventListener('click', async () => {
+        const zip = new JSZip();
+
+        // Add files to the zip
+        // Example 1: Adding a text file from a string
+        zip.file("hello.txt", "Hello, world!");
+
+        // Example 2: Adding a file fetched from a URL
+        const imageUrl = "https://example.com/image.jpg"; // Replace with your image URL
+        const imageResponse = await fetch(imageUrl);
+        const imageBlob = await imageResponse.blob();
+        zip.file("image.jpg", imageBlob);
+
+        // Generate the zip file as a Blob
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+
+        // Create a download link and trigger the download
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(zipBlob);
+        link.download = 'my_downloaded_files.zip'; // Desired filename for the downloaded zip
+        document.body.appendChild(link); // Append to body to make it clickable
+        link.click(); // Programmatically click the link to trigger download
+        document.body.removeChild(link); // Clean up the temporary link
+    });
+
+
+    async function createAndDownloadZip() {
+  // 1. Initialize JSZip
+  const zip = new JSZip();
+
+  // 2. Add files to the ZIP (e.g., fetched from server or local)
+  // Example: Add a text file
+  zip.file("certificate1.txt", "This is Certificate 1 content");
+  zip.file("certificate2.pdf", await fetch("/assets/documents/MlungisiMvubu_Certificates.zip").then(res => res.blob()));
+
+  // 3. Generate the ZIP as a Blob
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+
+  // 4. Create a temporary download link
+  const downloadUrl = URL.createObjectURL(zipBlob);
+  const link = document.createElement("a");
+  link.href = downloadUrl;
+  link.download = "MlungisiMvubu_Certificates.zip"; // Filename
+  document.body.appendChild(link);
+
+  // 5. Trigger the download
+  link.click();
+
+  // 6. Clean up (revoke the object URL)
+  setTimeout(() => {
+    URL.revokeObjectURL(downloadUrl);
+    link.remove();
+  }, 100);
+}
+
+// Call the function
+createAndDownloadZip();
