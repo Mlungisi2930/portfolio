@@ -1,2 +1,2 @@
 
-Live Demo: https://portfolio-mlungisi-mvubu.vercel.app/
+Live Demo: https://portfolio-frangipane-aebc8a.netlify.app/
